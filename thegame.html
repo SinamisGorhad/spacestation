@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Space Station</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #1a1a40, #000033);
+            color: white;
+            text-align: center;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .btn {
+            background-color: #6200ea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+        .question {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+        .quiz-image {
+            width: 200px;
+            margin-bottom: 20px;
+        }
+        .score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            color: white;
+        }
+        input[type='radio'] {
+            transform: scale(1.5);
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="score" id="score">Score: 0</div>
+    <div class="container" id="start-screen">
+        <h1>The Space Station</h1>
+        <img src="https://www.nasa.gov/sites/default/files/thumbnails/image/edu_what_is_a_satellite_feature.jpg" class="quiz-image">
+        <p>Welcome to the space station quiz! Click below to start.</p>
+        <button class="btn" onclick="startGame()">Start</button>
+    </div>
+
+    <div class="container hidden" id="info-screen">
+        <h2>About Srephot Bahalal</h2>
+        <p>The space station "Srephot Bahalal" uses a moving hallway system to facilitate transportation inside the station. This allows crew members to move effortlessly without needing to walk or use other means.</p>
+        <p>To deal with the absence of gravity, the station uses suitable conditioning (hot or cold), which helps maintain a comfortable environment for the crew.</p>
+        <p>Communication is handled through an internal network that allows seamless interaction between crew members across the station.</p>
+        <p>Research conducted on the station focuses on understanding the impacts of outer space on fire spread, which is crucial for future space exploration and safety measures.</p>
+        <p>The crew communicates with Earth using a special system that connects them directly to the ground team for real-time updates and assistance.</p>
+        <p>Oxygen and compression systems ensure proper air pressure and breathable air inside the station, making it a habitable environment.</p>
+        <p>Food is handled by a combination of supplies brought every two months and on-board cultivation of fruits and vegetables.</p>
+        <p>Crew members sleep in comfortable beds equipped with special straps to counteract the lack of gravity and ensure a restful experience.</p>
+        <p>The station's safety is ensured by its ventilation system, UV-protective walls, and carefully managed food supplies, making it a secure living space.</p>
+        <p>People reach the station via electric rockets supported by a chemical engine, making transportation efficient and reliable.</p>
+        <p>The station is shaped like a ring, with dorms surrounding the central research room, and it runs on energy harnessed from solar panels.</p>
+        <button class="btn" onclick="startQuiz()">Proceed to Quiz</button>
+    </div>
+
+    <div class="container hidden" id="quiz-screen">
+        <h2>Space Station Quiz</h2>
+        <div id="question-container" class="question"></div>
+        <button class="btn" onclick="nextQuestion()">Next</button>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "How does transportation work in the space station: 'Srephot Bahalal'?", options: ["Moving hallways", "Walking", "Riding bicycles", "External transportation system"], correct: 0 },
+            { q: "How do they deal with the absence of gravity on the space station?", options: ["Suitable conditioning (hot or cold)", "Special sticky shoes", "Wear spacesuits", "All answers are correct"], correct: 0 },
+            { q: "How do they communicate on the space station?", options: ["Phones", "Walkie talkies", "An internal network", "Pipes to talk into connecting in every room"], correct: 2 },
+            { q: "What do they research on the space station?", options: ["Growing pomelos", "Fire spread in space", "Different planet rocks", "Earth observation"], correct: 3 },
+            { q: "How do they communicate with Earth?", options: ["Phones", "Special communication system", "Big screen video chat", "Rocket mail"], correct: 0 },
+            { q: "How do people breathe on the station?", options: ["Stored air", "Weekly air rockets", "Space rock air machine", "Oxygen and compression system"], correct: 3 },
+            { q: "How is food handled on the space station?", options: ["Stored in kitchen", "Brought every 2 months", "Grown onboard", "Brought & grown onboard"], correct: 3 },
+            { q: "How do they sleep on the space station?", options: ["King-size beds", "Single beds", "Strapped beds", "No beds, sleep in suits"], correct: 1 },
+            { q: "What makes the space station safe?", options: ["Ventilation", "UV walls", "Food management", "All options"], correct: 3 },
+            { q: "How do people get to the station?", options: ["Electric-chemical rockets", "Chemical rockets", "Electric rockets", "Station flies to Earth"], correct: 0 },
+            { q: "How is the station shaped?", options: ["Dorms on left", "Ring dorms with central research", "Dorms on top", "Research at bottom"], correct: 1 }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function startGame() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('info-screen').classList.remove('hidden');
+        }
+
+        function startQuiz() {
+            document.getElementById('info-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            let optionsHTML = '';
+            question.options.forEach((option, index) => {
+                optionsHTML += `<input type='radio' name='answer' value='${index}'> ${option}<br>`;
+            });
+            document.getElementById('question-container').innerHTML = `<h3>${question.q}</h3>` + optionsHTML;
+        }
+
+        function nextQuestion() {
+            const selectedOption = document.querySelector('input[name="answer"]:checked');
+            if (selectedOption && parseInt(selectedOption.value) === questions[currentQuestion].correct) {
+                score++;
+                document.getElementById('score').innerText = `Score: ${score}`;
+            }
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                document.getElementById('quiz-screen').innerHTML = `<h2>Quiz Completed! Your score: ${score}/${questions.length}</h2>`;
+            }
+        }
+    </script>
+</body>
+</html>
